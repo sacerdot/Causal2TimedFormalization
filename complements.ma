@@ -8,7 +8,7 @@
 (*      ||A||         http://helm.cs.unibo.it                             *)
 (*      \   /                                                             *)
 (*       \ /        This file is distributed under the terms of the       *)
-(*        v         GNU General Public License Version 2                  *)
+(*        v         GNU General Public License Version 3                  *)
 (*                                                                        *)
 (**************************************************************************)
 
@@ -16,14 +16,14 @@ include "causal2timed.ma".
 
 (* No longer needed for the result in the paper *)
 
-definition CPI : LTSISR → Prop ≝
+definition PCI : RLTSI → Prop ≝
  λL.
   ∀t,u,u',t': L.
    commuting_square … t u u' t' →
     ind … u' (rev … t).
 
 lemma reverse_square_ind:
- ∀L: LTSISR. CPI L →
+ ∀L: RLTSI. PCI L →
   ∀t,u,u',t': L.
    commuting_square L t u u' t' →
     ind … (rev … u') (rev … t').
@@ -38,7 +38,7 @@ lemma reverse_square_ind:
 qed.
 
 lemma reverse_square:
- ∀L: LTSISR. CPI L → ∀t,u,u',t': L.
+ ∀L: RLTSI. PCI L → ∀t,u,u',t': L.
   commuting_square L t u u' t' →
    commuting_square … (rev … u') (rev … t') (rev … t) (rev … u).
  #L #H #t #u #u' #t' * #CI #IN #Ftu' #ut' #CF #Lt #Lu %

@@ -8,7 +8,7 @@
 (*      ||A||         http://helm.cs.unibo.it                             *)
 (*      \   /                                                             *)
 (*       \ /        This file is distributed under the terms of the       *)
-(*        v         GNU General Public License Version 2                  *)
+(*        v         GNU General Public License Version 3                  *)
 (*                                                                        *)
 (**************************************************************************)
 
