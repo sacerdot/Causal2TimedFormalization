@@ -8,7 +8,10 @@ submitted at QEST 2023.
 
 The repository contains the following files:
 
-- causal2timed.ma: it caontins all the definitions and proofs in the paper require for Theorem 2, which is the main result
+- formalization.pdf: a PDF file relating the definitions and theorems in the
+  paper with those in the formalization
+- causal2timed.ma: it caontins all the definitions and proofs in the paper
+  require for Theorem 2, which is the main result
   of the paper that is formalized in Matita
 - z_axioms.ma: the previous file depends on this one that provides an axiomatization of integer numbers
 - z.ma: this file shows a model of the axioms in z_axioms.ma (or, equivalently, an implementation of integer numbers that
