@@ -96,8 +96,8 @@ definition cofinal ≝
  λL:LTS. λa,b:L.
   dst … a = dst … b.
 
-(* actions that can be made consecutive *)
-definition follow ≝
+(* actions that can be composed *)
+definition composable ≝
  λL:LTS. λa,b:L.
   dst … a = src … b.
 
@@ -106,7 +106,7 @@ definition follow ≝
 inductive is_path (L: LTS) : list L → Prop ≝
  | wf_empty : is_path … []
  | wf_sing : ∀a. is_path … [a]
- | wf_cons : ∀a,b:L. ∀p. follow … a b → is_path … (b::p) → is_path … (a::b::p).
+ | wf_cons : ∀a,b:L. ∀p. composable … a b → is_path … (b::p) → is_path … (a::b::p).
 
 (* "dst_path … P p" holds iff the path p terminates with the process P;
    "dst_path … P []" holds for all "P" *)
@@ -153,14 +153,14 @@ lemma dst_path_cons:
  | #c * normalize [#_ #abs destruct] #x #s #K #EQ destruct /2/ ]
 qed.
 
-(* "follow_path … p q" holds iff the path "p" can be followed by "q"
+(* "composable_path … p q" holds iff the path "p" can be followed by "q"
    the two lists of actions are not required to satisfy is_path
 *)
-definition follow_path: ∀L: LTS. list L → list L → Prop ≝
+definition composable_path: ∀L: LTS. list L → list L → Prop ≝
  λL,p,q. ∃P: states L. dst_path … P p ∧ src_path … P q.
 
 lemma is_path_append: ∀L: LTS. ∀p,q: list L.
- is_path … p → is_path … q → follow_path … p q → is_path … (p@q).
+ is_path … p → is_path … q → composable_path … p q → is_path … (p@q).
  #L #p #q #Hp elim Hp
  [ //
  | #a cases q normalize //
@@ -188,7 +188,7 @@ lemma snoc_exists:
 qed. 
 
 lemma is_path_append': ∀L: LTS. ∀p,q: list L.
- is_path … (p@q) → is_path … p ∧ is_path … q ∧ follow_path … p q.
+ is_path … (p@q) → is_path … p ∧ is_path … q ∧ composable_path … p q.
  #L #p elim p
  [ #q normalize cases (src_path_exists … q) /4/
  | -p #a #p #II #q normalize #H inversion H
@@ -209,7 +209,7 @@ qed.
    the list of actions is not required to satisfy is_path
 *)
 definition is_cycle : ∀L: LTS. list L → Prop ≝
- λL,p. p ≠ [] ∧ follow_path … p p.
+ λL,p. p ≠ [] ∧ composable_path … p p.
 
 (* LTS with Independence *)
 record LTSI : Type[1] ≝
@@ -224,8 +224,8 @@ record LTSI : Type[1] ≝
 record commuting_square (L: LTSI) (t: L) (u: L) (u': L) (t': L) : Prop ≝
  { cs_coinit: coinit … t u
  ; cs_ind: ind … t u
- ; cs_follow1: follow … t u'
- ; cs_follow2: follow … u t'
+ ; cs_composable1: composable … t u'
+ ; cs_composable2: composable … u t'
  ; cs_cofinal: cofinal … u' t'
  ; cs_same_action1: action_of … t = action_of … t'
  ; cs_same_action2: action_of … u = action_of … u'
