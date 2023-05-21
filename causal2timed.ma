@@ -205,11 +205,9 @@ lemma is_path_append': ∀L: LTS. ∀p,q: list L.
        | * #x * #ll #EQ2 destruct lapply (dst_path_snoc … L1) /2/ ]]]]
 qed.
 
-(* being a cycle
-   the list of actions is not required to satisfy is_path
-*)
+(* being a cycle *)
 definition is_cycle : ∀L: LTS. list L → Prop ≝
- λL,p. p ≠ [] ∧ composable_path … p p.
+ λL,p. p ≠ [] ∧ is_path … p ∧ composable_path … p p.
 
 (* LTS with Independence *)
 record LTSI : Type[1] ≝
@@ -488,10 +486,10 @@ theorem absence_of_self_loops:
    | <abs #abs2 lapply (eql_to_not_eq … abs2) /2/ ]]
 qed.
 
-(* Every strange cancellative monoid is a cancellative monoid
-   Every cancellative monoid has a strange cancellative monoid as submonoid
-   Every abelian cancellative monoid is a strange cancellative monoid *)
-record strange_cancellative_monoid : Type[1] ≝
+(* Every specific cancellative monoid is a cancellative monoid
+   Every cancellative monoid has a specific cancellative monoid as submonoid
+   Every abelian cancellative monoid is a specific cancellative monoid *)
+record specific_cancellative_monoid : Type[1] ≝
  { fcarr :> Type[0]
  ; fop : fcarr → fcarr → fcarr
  ; fe : fcarr
@@ -505,7 +503,7 @@ record strange_cancellative_monoid : Type[1] ≝
    Definition 10 in the paper *)
 record RMLTSI : Type[1] ≝
  { ltsir :> RLTSI
- ; F: strange_cancellative_monoid
+ ; F: specific_cancellative_monoid
  ; rate : ltsir → F
  }.
 
@@ -572,11 +570,10 @@ theorem main:
  ∀L: RMLTSI. CC L → PPS L →
   ∀p: list L.
    is_cycle … p →
-   is_path … p →
     rateprod … p = rateprod … (rev_path … p).
- #L #Hcc  #Hro *
+ #L #Hcc #Hro *
  [ //
- | #a #p * #_ * #P * #Hdp #Hsp lapply (src_path_cons … Hsp) #Hs #WF
+ | #a #p ** #_ #WF * #P * #Hdp #Hsp lapply (src_path_cons … Hsp) #Hs
    lapply (rateprod_rev … (a::p) [a; rev … a] ?) //
    [ @Hcc /4/ %{P} % // %2{[a]} /3/
    | #H @(proj2 … H) normalize >rev_rev // ]]
